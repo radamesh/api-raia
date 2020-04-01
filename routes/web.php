@@ -12,13 +12,25 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return $router->app->version() . " COTAÇÃO DE VIAGEM";
 });
 
-$router->get('/quote', function () use ($router){
-    
-});
+/** 
+ * GET /quote/GRU/SCL
+ * Response
+ * {
+ *   "route": "GRU,BRC,SCL",
+ *   "price": 15  
+ * } 
+*/
+$router->get('/quote', 'CotacaoDeViagemController@quote');
 
-$router->post('/route', function () use ($router){
-
-});
+/**
+ * POST /route
+ * {    
+ *   "from": "BRC",      
+ *   "to": "BA",     
+ *   "price": 10 
+ * }
+ */
+$router->post('/route', 'CotacaoDeViagemController@route');
