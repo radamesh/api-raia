@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Request;
-// use Illumenate\Http\JsonResponse;
-// use Illumenate\Http\Request;
+// use App\Http\Requests\Request;
+// use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Cotacao;
 
 class CotacaoDeViagemController extends Controller
 {
@@ -18,25 +20,59 @@ class CotacaoDeViagemController extends Controller
         //
     }
 
-    public function quote() {
-       /* $response = [
-            "GRU,BRC,10",
-            "GRU,SCL,18",
-            "GRU,ORL,56",
-            "GRU,CDG,75",
-            "SCL,ORL,20",
-            "BRC,SCL,5",
-            "ORL,CDG,5"
-        ];
-
-        return response()->json($response) */
-        return "retorna teste";
+    /**
+     * GET /quote
+     * @return mixed
+     */
+    public function quote()
+    {
+        try {
+            return Cotacao::all();
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Quotes not found'
+                ]
+            ], 404);
+        }
     }
 
-    public function route(Request $request) {
+    /**
+     * GET /quote
+     * @return mixed
+     */
+    public function travelQuote($from, $to)
+    {
+        try {
+            //return Cotacao::all();
+            $result = app('db')->select("SELECT * FROM cotacao WHERE `from` = '{$from}' AND `to` = '{$to}'");
 
-        return [print_r($request->input())];
+            return response()->json([$from, $to, [$result]]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Travel Quotes not found'
+                ]
+            ], 404);
+        }
+    }
 
-        //return "teste de mensagem via post";
+    /**
+     * POST /route
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function route(Request $request)
+    {
+        try {
+            $quote = Cotacao::create($request->all());
+            return response()->json(['created' => true], 201);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Not create a travel quote '
+                ]
+            ], 404);
+        }
     }
 }

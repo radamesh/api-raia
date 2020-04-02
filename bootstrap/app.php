@@ -47,11 +47,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
-
 /*
 |--------------------------------------------------------------------------
 | Register Config Files

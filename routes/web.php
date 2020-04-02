@@ -16,14 +16,25 @@ $router->get('/', function () use ($router) {
 });
 
 /** 
- * GET /quote/GRU/SCL
+ * GET /quote
+ * Response ALL
+ * {
+ *   "from": "GRU",
+ *   "to": "BRC",
+ *   "price": 15  
+ * } 
+*/
+$router->get('/quote', 'CotacaoDeViagemController@quote');
+
+/** 
+ * GET /travel-quote/GRU/SCL
  * Response
  * {
  *   "route": "GRU,BRC,SCL",
  *   "price": 15  
  * } 
 */
-$router->get('/quote', 'CotacaoDeViagemController@quote');
+$router->get('/travel-quote/{from}/{to}', 'CotacaoDeViagemController@travelQuote');
 
 /**
  * POST /route
